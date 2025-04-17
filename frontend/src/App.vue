@@ -1,47 +1,43 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="app">
+    <h1>📝 Quiz Generator Web App</h1>
+    <FileUpload v-if="step === 1" @quiz-generated="startQuiz" />
+    <Quiz
+      v-else-if="step === 2"
+      :quizText="quizText"
+      @quiz-submitted="showResult"
+    />
+    <Result v-else-if="step === 3" v-bind="resultData" />
+  </div>
 </template>
 
+<script setup>
+import { ref } from "vue";
+import FileUpload from "./components/FileUpload.vue";
+import Quiz from "./components/Quiz.vue";
+import Result from "./components/Result.vue";
+
+const step = ref(1);
+const quizText = ref("");
+const resultData = ref({});
+
+const startQuiz = (text) => {
+  quizText.value = text;
+  step.value = 2;
+};
+
+const showResult = (data) => {
+  resultData.value = data;
+  step.value = 3;
+};
+</script>
+
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.app {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: sans-serif;
+  text-align: center;
 }
 </style>
